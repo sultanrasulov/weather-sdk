@@ -1,0 +1,190 @@
+# ============================================
+# Maven
+# ============================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Maven exclusions
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ============================================
+# Java
+# ============================================
+*.class
+*.log
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Compiled artifacts
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Exclusion for Maven wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+# ============================================
+# IntelliJ IDEA
+# ============================================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Keep shared workspace settings (optional - uncomment if needed)
+# !.idea/codeStyles/
+# !.idea/inspectionProfiles/
+# !.idea/runConfigurations/
+
+# ============================================
+# Eclipse
+# ============================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+# ============================================
+# NetBeans
+# ============================================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ============================================
+# VS Code
+# ============================================
+.vscode/
+*.code-workspace
+
+# Keep workspace settings (optional - uncomment if needed)
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
+
+# ============================================
+# Operating System
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# Test Coverage & Reports
+# ============================================
+# JaCoCo Coverage
+*.exec
+jacoco.xml
+jacoco-report/
+
+# Surefire & Failsafe Reports
+**/surefire-reports/
+**/failsafe-reports/
+**/test-output/
+**/test-results/
+
+# ============================================
+# Code Quality Tools
+# ============================================
+# SonarQube
+.sonar/
+.scannerwork/
+
+# SpotBugs
+.spotbugs/
+spotbugsXml.xml
+
+# Checkstyle
+.checkstyle
+checkstyle-result.xml
+
+# PMD
+.pmd
+pmd.xml
+
+# ============================================
+# Documentation
+# ============================================
+**/javadoc/
+**/apidocs/
+site/
+
+# ============================================
+# Temporary & Cache Files
+# ============================================
+*.tmp
+*.temp
+*.cache
+.cache/
+*.bak
+*.backup
+
+# ============================================
+# Security & Secrets
+# ============================================
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# Certificates & Keys
+*.key
+*.pem
+*.p12
+*.jks
+*.keystore
+secrets/
+
+# Weather SDK Specific - API Keys & Config
+src/test/resources/api-keys.properties
+src/test/resources/weather-api-config.properties
+**/test-api-keys.properties

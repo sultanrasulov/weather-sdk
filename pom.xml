@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.weather</groupId>
+    <artifactId>weather-sdk</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Weather SDK</name>
+    <description>SDK for accessing OpenWeatherMap API</description>
+
+    <properties>
+        <!-- ============================================ -->
+        <!-- Java & Encoding Settings                     -->
+        <!-- ============================================ -->
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- ============================================ -->
+        <!-- Dependency Versions                          -->
+        <!-- ============================================ -->
+        <!-- JSON Processing -->
+        <jackson-databind.version>2.20.0</jackson-databind.version>
+
+        <!-- Logging -->
+        <slf4j.version>2.0.17</slf4j.version>
+
+        <!-- Testing -->
+        <junit.jupiter.version>6.0.0</junit.jupiter.version>
+        <mockito-core.version>5.20.0</mockito-core.version>
+        <assertj-core.version>3.27.6</assertj-core.version>
+        <wiremock.version>3.13.2</wiremock.version>
+
+        <!-- ============================================ -->
+        <!-- Maven Plugins Versions                       -->
+        <!-- ============================================ -->
+        <!-- Core Plugins -->
+        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+
+        <!-- Testing Plugins -->
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
+
+        <!-- Reporting Plugins -->
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+
+        <!-- Code Quality Plugins -->
+        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
+        <google-java-format.version>1.26.0</google-java-format.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+
+        <!-- ============================================ -->
+        <!-- Build & Enforcer Settings                    -->
+        <!-- ============================================ -->
+        <enforcer.skip>false</enforcer.skip>
+        <enforcer.fail>true</enforcer.fail>
+        <enforcer.failFast>true</enforcer.failFast>
+
+        <!-- ============================================ -->
+        <!-- Test Execution Settings                      -->
+        <!-- ============================================ -->
+        <!-- Test Control -->
+        <skipTests>false</skipTests>
+        <skipITs>true</skipITs>
+        <testFailureIgnore>false</testFailureIgnore>
+
+        <!-- Fork settings -->
+        <test.forkCount>1</test.forkCount>
+        <surefire.forkCount>${test.forkCount}</surefire.forkCount>
+        <failsafe.forkCount>${test.forkCount}</failsafe.forkCount>
+        <test.reuseForks>true</test.reuseForks>
+
+        <!-- Memory settings -->
+        <surefire.memory>-Xmx1024m</surefire.memory>
+        <failsafe.memory>-Xmx2048m</failsafe.memory>
+
+        <!-- Timeout settings -->
+        <surefire.timeout>300</surefire.timeout>
+        <failsafe.timeout>600</failsafe.timeout>
+
+        <!-- Output settings -->
+        <redirectTestOutputToFile>false</redirectTestOutputToFile>
+        <trimStackTrace>false</trimStackTrace>
+
+        <!-- Retry settings -->
+        <rerunFailingTestsCount>0</rerunFailingTestsCount>
+        <surefire.rerunFailingTestsCount>${rerunFailingTestsCount}</surefire.rerunFailingTestsCount>
+        <failsafe.rerunFailingTestsCount>${rerunFailingTestsCount}</failsafe.rerunFailingTestsCount>
+
+        <!-- ============================================ -->
+        <!-- Code Coverage (JaCoCo)                       -->
+        <!-- ============================================ -->
+        <jacocoArgLine/>
+        <jacoco.skip>false</jacoco.skip>
+        <jacoco.line.coverage>0.70</jacoco.line.coverage>
+        <jacoco.branch.coverage>0.65</jacoco.branch.coverage>
+        <jacoco.class.coverage>0.60</jacoco.class.coverage>
+    </properties>
+
+    <dependencies>
+        <!-- ============================================ -->
+        <!-- Compile Dependencies                         -->
+        <!-- ============================================ -->
+
+        <!-- JSON Processing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
+        </dependency>
+
+        <!-- Logging API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- ============================================ -->
+        <!-- Test Dependencies                            -->
+        <!-- ============================================ -->
+
+        <!-- Logging Implementation (Test only) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 5 (Testing Framework) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito (Mocking Framework) -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- AssertJ (Fluent Assertions) -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- WireMock (HTTP Mocking for Integration Tests) -->
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>${wiremock.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- ============================================
+                 ENFORCER PLUGIN (Enforce Build Rules)
+                 ============================================ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-build-rules</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <skip>${enforcer.skip}</skip>
+                            <fail>${enforcer.fail}</fail>
+                            <failFast>${enforcer.failFast}</failFast>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.6.3,)</version>
+                                    <message>Maven 3.6.3 or higher is required!</message>
+                                </requireMavenVersion>
+
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                    <message>Java 17 or higher is required!</message>
+                                </requireJavaVersion>
+
+                                <requirePluginVersions>
+                                    <message>All plugins must have explicit versions!</message>
+                                    <banLatest>true</banLatest>
+                                    <banRelease>true</banRelease>
+                                    <banSnapshots>true</banSnapshots>
+                                </requirePluginVersions>
+
+                                <banDuplicatePomDependencyVersions>
+                                    <message>Duplicate dependency versions found in POM.</message>
+                                </banDuplicatePomDependencyVersions>
+
+                                <requireReleaseDeps>
+                                    <message>No SNAPSHOT dependencies allowed in release!</message>
+                                    <onlyWhenRelease>true</onlyWhenRelease>
+                                </requireReleaseDeps>
+
+                                <requireProperty>
+                                    <property>project.build.sourceEncoding</property>
+                                    <message>Source encoding must be UTF-8!</message>
+                                    <regex>UTF-8</regex>
+                                </requireProperty>
+
+                                <requireProperty>
+                                    <property>project.version</property>
+                                    <message>Project version must follow semantic versioning (e.g. 1.2.3 or 1.2.3-SNAPSHOT)!</message>
+                                    <regex>^\d+\.\d+\.\d+(-[A-Za-z0-9]+([\.-][A-Za-z0-9]+)*)?(-SNAPSHOT)?$</regex>
+                                </requireProperty>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ============================================
+                 COMPILER PLUGIN
+                 ============================================ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <release>${java.version}</release>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <parameters>true</parameters>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <!-- ============================================
+                 SUREFIRE PLUGIN (Unit Tests)
+                 ============================================ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <!-- Test Control -->
+                    <skipTests>${skipTests}</skipTests>
+                    <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+
+                    <!-- Test Execution -->
+                    <forkCount>${surefire.forkCount}</forkCount>
+                    <reuseForks>${test.reuseForks}</reuseForks>
+                    <forkedProcessTimeoutInSeconds>${surefire.timeout}</forkedProcessTimeoutInSeconds>
+                    <rerunFailingTestsCount>${surefire.rerunFailingTestsCount}</rerunFailingTestsCount>
+
+                    <!-- Output Settings -->
+                    <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
+                    <printSummary>true</printSummary>
+                    <trimStackTrace>${trimStackTrace}</trimStackTrace>
+
+                    <!-- Encoding & Modules -->
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <useModulePath>false</useModulePath>
+
+                    <!-- JVM Configuration -->
+                    <argLine>
+                        @{jacocoArgLine}
+                        ${surefire.memory}
+                        -Dfile.encoding=${project.build.sourceEncoding}
+                        -Djava.awt.headless=true
+                    </argLine>
+
+                    <!-- Test Patterns -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- ============================================
+                FAILSAFE PLUGIN (Integration Tests)
+                ============================================ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <!-- Test Control -->
+                    <skipTests>${skipTests}</skipTests>
+                    <skipITs>${skipITs}</skipITs>
+                    <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
+
+                    <!-- Test Execution -->
+                    <forkCount>${failsafe.forkCount}</forkCount>
+                    <reuseForks>${test.reuseForks}</reuseForks>
+                    <forkedProcessTimeoutInSeconds>${failsafe.timeout}</forkedProcessTimeoutInSeconds>
+                    <rerunFailingTestsCount>${failsafe.rerunFailingTestsCount}</rerunFailingTestsCount>
+
+                    <!-- Output Settings -->
+                    <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
+                    <printSummary>true</printSummary>
+                    <trimStackTrace>${trimStackTrace}</trimStackTrace>
+
+                    <!-- Encoding & Modules -->
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <useModulePath>false</useModulePath>
+
+                    <!-- JVM Configuration -->
+                    <argLine>
+                        @{jacocoArgLine}
+                        ${failsafe.memory}
+                        -Dfile.encoding=${project.build.sourceEncoding}
+                        -Djava.awt.headless=true
+                    </argLine>
+
+                    <!-- Test Patterns -->
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*IntegrationTest.java</include>
+                    </includes>
+                </configuration>
+
+                <!-- Bind to Maven lifecycle -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ============================================
+                 SOURCE PLUGIN (Generate sources JAR)
+                 ============================================ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ============================================
+                 JAVADOC PLUGIN (Generate JavaDoc JAR)
+                 ============================================ -->
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>${java.version}</source>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <doclint>none</doclint>
+                    <show>public</show>
+                </configuration>
+            </plugin>
+
+            <!-- ============================================
+                 SPOTLESS PLUGIN (Code Formatting)
+                 ============================================ -->
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>spotless-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>src/**/*.java</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/generated/**</exclude>
+                            <exclude>**/*_.java</exclude>
+                        </excludes>
+                        <googleJavaFormat>
+                            <version>${google-java-format.version}</version>
+                            <style>GOOGLE</style>
+                        </googleJavaFormat>
+                        <removeUnusedImports/>
+                    </java>
+                </configuration>
+            </plugin>
+
+            <!-- ============================================
+                 JACOCO PLUGIN (Code Coverage)
+                 ============================================ -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/exception/**</exclude>
+                        <exclude>**/*OperationMode.*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <skip>${jacoco.skip}</skip>
+                            <propertyName>jacocoArgLine</propertyName>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <skip>${jacoco.skip}</skip>
+                            <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+                            <formats>
+                                <format>HTML</format>
+                                <format>XML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <skip>${jacoco.skip}</skip>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.line.coverage}</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.branch.coverage}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.class.coverage}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- ============================================
+             DEV PROFILE
+             ============================================ -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <!-- ============================================
+             DEBUG PROFILE
+             ============================================ -->
+        <profile>
+            <id>debug</id>
+            <properties>
+                <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                <trimStackTrace>false</trimStackTrace>
+            </properties>
+        </profile>
+
+        <!-- ============================================
+             CI PROFILE
+             ============================================ -->
+        <profile>
+            <id>ci</id>
+            <properties>
+                <enforcer.fail>true</enforcer.fail>
+                <enforcer.failFast>false</enforcer.failFast>
+                <skipITs>false</skipITs>
+                <surefire.forkCount>2</surefire.forkCount>
+                <failsafe.forkCount>1</failsafe.forkCount>
+                <surefire.timeout>180</surefire.timeout>
+                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                <trimStackTrace>true</trimStackTrace>
+                <rerunFailingTestsCount>1</rerunFailingTestsCount>
+            </properties>
+        </profile>
+
+        <!-- ============================================
+             RELEASE PROFILE
+             ============================================ -->
+        <profile>
+            <id>release</id>
+            <properties>
+                <skipITs>false</skipITs>
+                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                <trimStackTrace>true</trimStackTrace>
+            </properties>
+        </profile>
+
+        <!-- ============================================
+             FAST PROFILE
+             ============================================ -->
+        <profile>
+            <id>fast</id>
+            <properties>
+                <skipTests>true</skipTests>
+                <skipITs>true</skipITs>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+                <maven.source.skip>true</maven.source.skip>
+                <spotless.check.skip>true</spotless.check.skip>
+                <spotless.apply.skip>true</spotless.apply.skip>
+                <jacoco.skip>true</jacoco.skip>
+            </properties>
+        </profile>
+    </profiles>
+</project>
