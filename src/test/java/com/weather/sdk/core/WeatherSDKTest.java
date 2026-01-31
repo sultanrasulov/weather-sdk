@@ -43,7 +43,7 @@ class WeatherSDKTest {
   void setUp() {
     mockClient = mock(OpenWeatherApiClient.class);
     cache = new WeatherCache(10, Duration.ofMinutes(10));
-    sdk = new WeatherSDK(TEST_API_KEY, OperationMode.ON_DEMAND, mockClient, cache);
+    sdk = new WeatherSDK(mockClient, cache);
   }
 
   @Nested
@@ -59,39 +59,11 @@ class WeatherSDKTest {
       WeatherCache cache = new WeatherCache();
 
       // Act
-      WeatherSDK sdk = new WeatherSDK(TEST_API_KEY, mode, client, cache);
+      WeatherSDK sdk = new WeatherSDK(client, cache);
 
       // Assert
       assertThat(sdk).isNotNull();
       assertThat(sdk.isShutdown()).isFalse();
-    }
-
-    @Test
-    @DisplayName("should reject null API key")
-    void shouldRejectNullApiKey() {
-      // Arrange
-      OperationMode mode = OperationMode.ON_DEMAND;
-      OpenWeatherApiClient client = mock(OpenWeatherApiClient.class);
-      WeatherCache cache = new WeatherCache();
-
-      // Act & Assert
-      assertThatThrownBy(() -> new WeatherSDK(null, mode, client, cache))
-          .isInstanceOf(NullPointerException.class)
-          .hasMessageContaining("apiKey must not be null");
-    }
-
-    @Test
-    @DisplayName("should reject null mode")
-    void shouldRejectNullMode() {
-      // Arrange
-      String apiKey = "test-key";
-      OpenWeatherApiClient client = mock(OpenWeatherApiClient.class);
-      WeatherCache cache = new WeatherCache();
-
-      // Act & Assert
-      assertThatThrownBy(() -> new WeatherSDK(apiKey, null, client, cache))
-          .isInstanceOf(NullPointerException.class)
-          .hasMessageContaining("mode must not be null");
     }
 
     @Test
@@ -103,7 +75,7 @@ class WeatherSDKTest {
       WeatherCache cache = new WeatherCache();
 
       // Act & Assert
-      assertThatThrownBy(() -> new WeatherSDK(apiKey, mode, null, cache))
+      assertThatThrownBy(() -> new WeatherSDK(null, cache))
           .isInstanceOf(NullPointerException.class)
           .hasMessageContaining("client must not be null");
     }
@@ -117,7 +89,7 @@ class WeatherSDKTest {
       OperationMode mode = OperationMode.ON_DEMAND;
 
       // Act & Assert
-      assertThatThrownBy(() -> new WeatherSDK(apiKey, mode, client, null))
+      assertThatThrownBy(() -> new WeatherSDK(client, null))
           .isInstanceOf(NullPointerException.class)
           .hasMessageContaining("cache must not be null");
     }
@@ -166,8 +138,7 @@ class WeatherSDKTest {
     void shouldFetchFromApiIfCacheExpired() throws Exception {
       // Arrange
       WeatherCache shortTtlCache = new WeatherCache(10, Duration.ofMillis(100));
-      WeatherSDK sdkWithShortTtl =
-          new WeatherSDK(TEST_API_KEY, OperationMode.ON_DEMAND, mockClient, shortTtlCache);
+      WeatherSDK sdkWithShortTtl = new WeatherSDK(mockClient, shortTtlCache);
 
       OpenWeatherApiResponse apiResponse = createMockApiResponse(TEST_CITY);
       when(mockClient.getCurrentWeather(TEST_CITY)).thenReturn(apiResponse);
@@ -333,8 +304,7 @@ class WeatherSDKTest {
     void shouldReturnFalseWhenExpired() throws Exception {
       // Arrange
       WeatherCache shortTtlCache = new WeatherCache(10, Duration.ofMillis(100));
-      WeatherSDK sdkWithShortTtl =
-          new WeatherSDK(TEST_API_KEY, OperationMode.ON_DEMAND, mockClient, shortTtlCache);
+      WeatherSDK sdkWithShortTtl = new WeatherSDK(mockClient, shortTtlCache);
 
       OpenWeatherApiResponse apiResponse = createMockApiResponse(TEST_CITY);
       when(mockClient.getCurrentWeather(TEST_CITY)).thenReturn(apiResponse);

@@ -38,8 +38,6 @@ import java.util.Set;
  */
 public final class WeatherSDK {
 
-  private final String apiKey;
-  private final OperationMode mode;
   private final OpenWeatherApiClient client;
   private final WeatherCache cache;
   private volatile boolean isShutdown;
@@ -47,15 +45,11 @@ public final class WeatherSDK {
   /**
    * Package-private constructor for WeatherSDKFactory.
    *
-   * @param apiKey OpenWeatherMap API key (must not be null)
-   * @param mode operation mode (must not be null)
    * @param client HTTP client for API requests (must not be null)
    * @param cache weather data cache (must not be null)
    * @throws NullPointerException if any parameter is null
    */
-  WeatherSDK(String apiKey, OperationMode mode, OpenWeatherApiClient client, WeatherCache cache) {
-    this.apiKey = Objects.requireNonNull(apiKey, "apiKey must not be null");
-    this.mode = Objects.requireNonNull(mode, "mode must not be null");
+  WeatherSDK(OpenWeatherApiClient client, WeatherCache cache) {
     this.client = Objects.requireNonNull(client, "client must not be null");
     this.cache = Objects.requireNonNull(cache, "cache must not be null");
     this.isShutdown = false;
