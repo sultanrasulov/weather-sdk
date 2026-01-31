@@ -104,9 +104,9 @@
         <!-- ============================================ -->
         <jacocoArgLine/>
         <jacoco.skip>false</jacoco.skip>
-        <jacoco.line.coverage>0.70</jacoco.line.coverage>
-        <jacoco.branch.coverage>0.65</jacoco.branch.coverage>
-        <jacoco.class.coverage>0.60</jacoco.class.coverage>
+        <jacoco.line.coverage>0.95</jacoco.line.coverage>
+        <jacoco.branch.coverage>0.90</jacoco.branch.coverage>
+        <jacoco.class.coverage>0.90</jacoco.class.coverage>
     </properties>
 
     <dependencies>
@@ -473,6 +473,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/exception/**</exclude>
+                        <exclude>**/*Exception.*</exclude>
                         <exclude>**/*OperationMode.*</exclude>
                     </excludes>
                 </configuration>
