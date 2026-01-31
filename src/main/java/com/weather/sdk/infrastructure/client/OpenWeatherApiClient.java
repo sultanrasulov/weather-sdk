@@ -23,7 +23,13 @@ import java.util.Objects;
  */
 public final class OpenWeatherApiClient {
 
-  private static final String DEFAULT_BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+  /**
+   * Default OpenWeatherMap API base URL for current weather data.
+   *
+   * @since 1.0.0
+   */
+  public static final String DEFAULT_BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+
   private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
   private final String baseUrl;
@@ -47,19 +53,33 @@ public final class OpenWeatherApiClient {
   /**
    * Creates a new OpenWeatherApiClient with custom base URL.
    *
-   * <p>Package-private constructor for testing. Allows injection of custom base URL to support
-   * mocking with WireMock or other test frameworks.
+   * <p>This constructor allows specifying a custom API endpoint, which is useful for:
+   *
+   * <ul>
+   *   <li>Integration testing with mock servers (WireMock, MockServer, etc.)
+   *   <li>Using alternative OpenWeatherMap endpoints (e.g., enterprise, regional, or legacy APIs)
+   *   <li>Proxying requests through custom infrastructure or API gateways
+   *   <li>Local development with containerized API instances
+   * </ul>
+   *
+   * <p><strong>Recommended:</strong> For standard usage with the public OpenWeatherMap API, use
+   * {@link #OpenWeatherApiClient(String)} instead, which uses the default production endpoint.
    *
    * @param apiKey OpenWeatherMap API key (must not be null or blank)
-   * @param baseUrl custom API base URL (must not be null)
+   * @param baseUrl custom API base URL (must not be null or blank)
    * @throws NullPointerException if apiKey or baseUrl is null
-   * @throws IllegalArgumentException if apiKey is blank
+   * @throws IllegalArgumentException if apiKey or baseUrl is blank
+   * @since 1.0.0
    */
-  OpenWeatherApiClient(String apiKey, String baseUrl) {
+  public OpenWeatherApiClient(String apiKey, String baseUrl) {
     Objects.requireNonNull(apiKey, "apiKey must not be null");
     Objects.requireNonNull(baseUrl, "baseUrl must not be null");
+
     if (apiKey.isBlank()) {
       throw new IllegalArgumentException("apiKey must not be blank");
+    }
+    if (baseUrl.isBlank()) {
+      throw new IllegalArgumentException("baseUrl must not be blank");
     }
 
     this.baseUrl = baseUrl;
