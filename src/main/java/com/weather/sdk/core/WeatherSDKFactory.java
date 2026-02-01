@@ -165,7 +165,7 @@ public final class WeatherSDKFactory {
 
     OpenWeatherApiClient client = new OpenWeatherApiClient(apiKey, baseUrl);
     WeatherCache cache = new WeatherCache(DEFAULT_CACHE_CAPACITY, DEFAULT_CACHE_TTL);
-    WeatherSDK sdk = new WeatherSDK(client, cache);
+    WeatherSDK sdk = new WeatherSDK(mode, client, cache);
 
     instances.put(normalizedKey, sdk);
     return sdk;

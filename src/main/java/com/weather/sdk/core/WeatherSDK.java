@@ -6,6 +6,7 @@ import com.weather.sdk.infrastructure.client.OpenWeatherApiClient;
 import com.weather.sdk.infrastructure.dto.OpenWeatherApiResponse;
 import com.weather.sdk.infrastructure.exception.OpenWeatherApiException;
 import com.weather.sdk.infrastructure.mapper.WeatherMapper;
+import com.weather.sdk.polling.PollingService;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -38,21 +39,38 @@ import java.util.Set;
  */
 public final class WeatherSDK {
 
+  private final OperationMode mode;
   private final OpenWeatherApiClient client;
   private final WeatherCache cache;
+  private final PollingService pollingService;
   private volatile boolean isShutdown;
 
   /**
    * Package-private constructor for WeatherSDKFactory.
    *
+   * <p>Creates WeatherSDK instance and automatically starts background polling if mode is POLLING.
+   *
+   * <p><strong>IMPORTANT:</strong> In POLLING mode, background polling is started automatically.
+   * You MUST call {@link #shutdown()} to stop background threads and prevent resource leaks.
+   *
+   * @param mode operation mode (must not be null)
    * @param client HTTP client for API requests (must not be null)
    * @param cache weather data cache (must not be null)
    * @throws NullPointerException if any parameter is null
+   * @since 1.0.0
    */
-  WeatherSDK(OpenWeatherApiClient client, WeatherCache cache) {
+  WeatherSDK(OperationMode mode, OpenWeatherApiClient client, WeatherCache cache) {
+    this.mode = Objects.requireNonNull(mode, "mode must not be null");
     this.client = Objects.requireNonNull(client, "client must not be null");
     this.cache = Objects.requireNonNull(cache, "cache must not be null");
     this.isShutdown = false;
+
+    if (this.mode.isPolling()) {
+      this.pollingService = new PollingService(this.cache, this.client);
+      this.pollingService.start();
+    } else {
+      this.pollingService = null;
+    }
   }
 
   /**
@@ -160,9 +178,9 @@ public final class WeatherSDK {
   /**
    * Shuts down the SDK and releases all resources.
    *
-   * <p>This method clears the cache and stops all background operations. After calling this method,
-   * the SDK cannot be used anymore. All subsequent method calls will throw {@link
-   * IllegalStateException}.
+   * <p>This method stops background polling (if active), clears the cache, and marks the SDK as
+   * shut down. After calling this method, the SDK cannot be used anymore. All subsequent method
+   * calls will throw {@link IllegalStateException}.
    *
    * <p>This method is idempotent - calling it multiple times is safe.
    *
@@ -175,6 +193,12 @@ public final class WeatherSDK {
       return;
     }
     this.isShutdown = true;
+
+    // Stop polling if active
+    if (this.pollingService != null && this.pollingService.isRunning()) {
+      this.pollingService.shutdown();
+    }
+
     this.cache.clear();
   }
 
