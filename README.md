@@ -419,4 +419,4 @@ MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-**Made with ☕ by [Sultan](https://github.com/sultanrasulov)**
+**Made with ☕ by [Soltan](https://github.com/sultanrasulov)**
